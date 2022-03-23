@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:starthack_frontapp/views/login.dart';
 import 'package:starthack_frontapp/views/register.dart';
+import 'package:starthack_frontapp/service/http_service.dart';
 
 class WelcomePage extends StatefulWidget {
   const WelcomePage({Key? key}) : super(key: key);
@@ -13,7 +14,9 @@ class _WelcomePageState extends State<WelcomePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(),
+      appBar: AppBar(
+        title: Text("Fake Tinder"),
+      ),
       body: Container(
         margin: const EdgeInsets.symmetric(horizontal: 30),
         decoration: BoxDecoration(borderRadius: BorderRadius.circular(20)),
@@ -28,7 +31,7 @@ class _WelcomePageState extends State<WelcomePage> {
                 },
                 child: Container(
                   margin:
-                  const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+                      const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
                   child: const Center(
                     child: Text(
                       "Login",
@@ -49,7 +52,7 @@ class _WelcomePageState extends State<WelcomePage> {
                 },
                 child: Container(
                   margin:
-                  const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+                      const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
                   child: const Center(
                     child: Text(
                       "Register",

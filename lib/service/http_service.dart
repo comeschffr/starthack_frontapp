@@ -11,9 +11,14 @@ import 'package:starthack_frontapp/views/welcome.dart';
 class HttpService {
   static final _client = http.Client();
 
-  static var _loginUrl = Uri.parse('https://main-starthack-backend.herokuapp.com/login');
+  static var _loginUrl =
+      Uri.parse('https://tinder-starthack-backend.herokuapp.com/login');
 
-  static var _registerUrl = Uri.parse('https://main-starthack-backend.herokuapp.com/register');
+  static var _registerUrl =
+      Uri.parse('https://tinder-starthack-backend.herokuapp.com/register');
+
+  static var _getHeros =
+      Uri.parse('https://tinder-starthack-backend.herokuapp.com/get_heros');
 
   static login(email, password, context) async {
     http.Response response = await _client.post(_loginUrl, body: {
@@ -49,7 +54,6 @@ class HttpService {
       var json = jsonDecode(response.body);
       if (json[0] == 'username already exist') {
         await EasyLoading.showError(json[0]);
-
       } else {
         await EasyLoading.showSuccess(json[0]);
         Navigator.pushReplacement(
@@ -58,6 +62,21 @@ class HttpService {
     } else {
       await EasyLoading.showError(
           "Error Code : ${response.statusCode.toString()}");
+    }
+  }
+
+  Future<String> getnextcard() async {
+    final response = await http.get(_getHeros);
+
+    if (response.statusCode == 200) {
+      // If the server did return a 200 OK response,
+      // then parse the JSON.
+      //print(response.body);
+      return response.body;
+    } else {
+      // If the server did not return a 200 OK response,
+      // then throw an exception.
+      throw Exception('Failed to load');
     }
   }
 }
