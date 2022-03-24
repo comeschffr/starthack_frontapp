@@ -1,15 +1,17 @@
+import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'dart:ui';
 
 class DetailsPage extends StatefulWidget {
-  final String title, releasedate, posterurl;
+  final String title, releasedate, posterurl, plot;
 
   DetailsPage(
       {Key? key,
       required this.title,
       required this.releasedate,
-      required this.posterurl})
+      required this.posterurl,
+      required this.plot})
       : super(key: key);
 
   @override
@@ -75,16 +77,14 @@ class _DetailsPageState extends State<DetailsPage> {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Container(
-                        margin: const EdgeInsets.all(0.0),
+                        padding: const EdgeInsets.all(0.0),
                         child: Text(
-                          widget.title + ", " + widget.releasedate,
-                          style: const TextStyle(
+                          widget.title + "\n" + widget.releasedate,
+                          style: TextStyle(
                             color: Colors.black87,
-                            fontSize: 24.0,
+                            fontSize: 20,
                             fontWeight: FontWeight.bold,
-                            overflow: TextOverflow.ellipsis,
                           ),
-                          overflow: TextOverflow.ellipsis,
                         ),
                       ),
                     ],

@@ -17,7 +17,7 @@ class HttpService {
       Uri.parse('https://tinder-starthack-backend.herokuapp.com/register');
 
   static var _getMovie = Uri.parse(
-      'https://tinder-starthack-backend.herokuapp.com/get_next_movie');
+      'https://tinder-starthack-backend.herokuapp.com/get_next_movies');
 
   static login(email, password, context) async {
     http.Response response = await _client.post(_loginUrl, body: {
@@ -64,7 +64,7 @@ class HttpService {
     }
   }
 
-  Future<String> getnextcard() async {
+  Future<String> getnextcards() async {
     final response = await http.get(_getMovie);
 
     if (response.statusCode == 200) {

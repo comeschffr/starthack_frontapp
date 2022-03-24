@@ -32,18 +32,10 @@ class _DashboardState extends State<Dashboard> {
       GlobalKey<ScaffoldMessengerState>();
 
   Future getData() async {
-    //String response = await HttpService().getnextcard();
-    //print(jsonDecode(response)['results']);
-    List<dynamic> data = [
-      {
-        "movie_id": 603,
-        "title": "The Matrix 1",
-        "release_date": '1999',
-        "poster_url":
-            "https://m.media-amazon.com/images/M/MV5BNzQzOTk3OTAtNDQ0Zi00ZTVkLWI0MTEtMDllZjNkYzNjNTc4L2ltYWdlXkEyXkFqcGdeQXVyNjU0OTQ0OTY@._V1_FMjpg_UX1000_.jpg",
-        "trailer_url": "https://www.youtube.com/watch?v=vKQi3bBA1y8",
-      }
-    ];
+    String response = await HttpService().getnextcards();
+    print("dashboard!");
+    print(jsonDecode(response)['results']);
+    List<dynamic> data = jsonDecode(response)['results'];
     print(data[0]);
     print("printed data");
     setState(() {
@@ -51,7 +43,6 @@ class _DashboardState extends State<Dashboard> {
 
       if (usersData.isNotEmpty) {
         for (int i = 0; i < usersData.length; i++) {
-          print(usersData[i]);
           _swipeItems.add(SwipeItem(
               // content: Content(text: _names[i], color: _colors[i]),
               content: Content(text: usersData[i]['title']),
@@ -114,7 +105,7 @@ class _DashboardState extends State<Dashboard> {
       ),
       body: Container(
         child: isLoading
-            ? const CircularProgressIndicator()
+            ? Center(child: CircularProgressIndicator())
             : Stack(
                 children: <Widget>[
                   Positioned(
@@ -161,74 +152,74 @@ class _DashboardState extends State<Dashboard> {
                                       mainAxisAlignment:
                                           MainAxisAlignment.start,
                                       children: <Widget>[
-                                        Column(
-                                          crossAxisAlignment:
-                                              CrossAxisAlignment.start,
-                                          mainAxisAlignment:
-                                              MainAxisAlignment.center,
-                                          children: <Widget>[
-                                            Flexible(
+                                        Flexible(
+                                          child: Padding(
+                                            padding: const EdgeInsets.all(4.0),
+                                            child: FittedBox(
+                                              fit: BoxFit.fitWidth,
                                               child: Padding(
                                                 padding:
                                                     const EdgeInsets.all(4.0),
-                                                child: FittedBox(
-                                                  fit: BoxFit.fitWidth,
-                                                  child: TextButton.icon(
-                                                    onPressed: () {
-                                                      Navigator.push(
-                                                          context,
-                                                          MaterialPageRoute(
-                                                              builder:
-                                                                  ((context) =>
-                                                                      DetailsPage(
-                                                                        title: usersData[index]
-                                                                            [
-                                                                            'title'],
-                                                                        releasedate:
-                                                                            usersData[index]['release_date'],
-                                                                        posterurl:
-                                                                            usersData[index]['poster_url'],
-                                                                      ))));
-                                                    },
-                                                    icon: Icon(
-                                                      CupertinoIcons.info,
+                                                child: TextButton.icon(
+                                                  onPressed: () {
+                                                    Navigator.push(
+                                                        context,
+                                                        MaterialPageRoute(
+                                                            builder:
+                                                                ((context) =>
+                                                                    DetailsPage(
+                                                                      title: usersData[
+                                                                              index]
+                                                                          [
+                                                                          'title'],
+                                                                      releasedate:
+                                                                          usersData[index]['release_date']
+                                                                              .toString(),
+                                                                      posterurl:
+                                                                          usersData[index]
+                                                                              [
+                                                                              'poster_url'],
+                                                                      plot: usersData[
+                                                                              index]
+                                                                          [
+                                                                          'plot'],
+                                                                    ))));
+                                                  },
+                                                  icon: Icon(
+                                                    CupertinoIcons.info,
+                                                    color: Colors.white,
+                                                    size: MediaQuery.of(context)
+                                                            .size
+                                                            .width *
+                                                        0.1,
+                                                  ),
+                                                  label: Text(
+                                                    usersData[index]["title"] +
+                                                        ", " +
+                                                        usersData[index]
+                                                                ["release_date"]
+                                                            .toString(),
+                                                    maxLines: 1,
+                                                    softWrap: false,
+                                                    style: TextStyle(
                                                       color: Colors.white,
-                                                      size:
+                                                      fontSize:
                                                           MediaQuery.of(context)
                                                                   .size
                                                                   .width *
-                                                              0.1,
-                                                    ),
-                                                    label: Text(
-                                                      usersData[index]
-                                                              ["title"] +
-                                                          ", " +
-                                                          usersData[index]
-                                                              ["release_date"],
-                                                      overflow:
-                                                          TextOverflow.ellipsis,
-                                                      maxLines: 1,
-                                                      softWrap: false,
-                                                      style: TextStyle(
-                                                        color: Colors.white,
-                                                        fontSize: MediaQuery.of(
-                                                                    context)
-                                                                .size
-                                                                .width *
-                                                            0.87 *
-                                                            1.1 /
-                                                            usersData[index]
-                                                                    ['title']
-                                                                .length,
-                                                        fontWeight:
-                                                            FontWeight.bold,
-                                                      ),
+                                                              0.87 *
+                                                              1.3 /
+                                                              usersData[index]
+                                                                      ['title']
+                                                                  .length,
+                                                      fontWeight:
+                                                          FontWeight.bold,
                                                     ),
                                                   ),
                                                 ),
                                               ),
                                             ),
-                                          ],
+                                          ),
                                         ),
                                       ],
                                     ),
@@ -360,7 +351,7 @@ class _DashboardState extends State<Dashboard> {
             backgroundColor: Color.fromARGB(255, 26, 0, 70),
             showSelectedLabels: false,
             showUnselectedLabels: false,
-            selectedItemColor: Colors.purple[100],
+            selectedItemColor: Colors.white,
             unselectedItemColor: Colors.white,
             iconSize: 24.0,
             enableFeedback: true,
