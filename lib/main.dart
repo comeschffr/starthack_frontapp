@@ -1,11 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
-import 'package:starthack_frontapp/views/login.dart';
-import 'package:starthack_frontapp/views/register.dart';
-import 'package:starthack_frontapp/views/welcome.dart';
+import 'package:starthack_frontapp/views/dashboard.dart';
 
 void main() {
-  runApp( MyApp());
+  runApp(MyApp());
 }
 
 class MyApp extends StatelessWidget {
@@ -14,8 +12,9 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: "LoginApp",
-      home: WelcomePage(),
+      debugShowCheckedModeBanner: false,
+      title: "Tinder App",
+      home: Dashboard(),
       builder: EasyLoading.init(),
     );
   }
