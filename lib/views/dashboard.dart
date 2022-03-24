@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:starthack_frontapp/service/http_service.dart';
+import 'package:starthack_frontapp/views/shorts.dart';
 import 'package:swipe_cards/draggable_card.dart';
 import 'package:swipe_cards/swipe_cards.dart';
 import 'package:flutter/cupertino.dart';
@@ -77,8 +78,8 @@ class _DashboardState extends State<Dashboard> {
 
   @override
   void initState() {
-    super.initState();
     getData();
+    super.initState();
   }
 
   @override
@@ -126,12 +127,27 @@ class _DashboardState extends State<Dashboard> {
                                     borderRadius: BorderRadius.circular(24.0),
                                   ),
                                   color: Color.fromARGB(255, 0, 0, 0),
-                                  child: FittedBox(
-                                    fit: BoxFit.fill,
-                                    child: ClipRRect(
-                                      borderRadius: BorderRadius.circular(24.0),
-                                      child: Image.network(
-                                          usersData[index]['poster_url']),
+                                  child: InkWell(
+                                    onTap: () {
+                                      print("here");
+                                      Navigator.push(
+                                          context,
+                                          PageRouteBuilder(
+                                              pageBuilder: ((context, animation,
+                                                      secondaryAnimation) =>
+                                                  ShortsPage()),
+                                              transitionDuration: Duration.zero,
+                                              reverseTransitionDuration:
+                                                  Duration.zero));
+                                    },
+                                    child: FittedBox(
+                                      fit: BoxFit.fill,
+                                      child: ClipRRect(
+                                        borderRadius:
+                                            BorderRadius.circular(24.0),
+                                        child: Image.network(
+                                            usersData[index]['poster_url']),
+                                      ),
                                     ),
                                   ),
                                 ),

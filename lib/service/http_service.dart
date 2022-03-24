@@ -16,8 +16,8 @@ class HttpService {
   static var _registerUrl =
       Uri.parse('https://tinder-starthack-backend.herokuapp.com/register');
 
-  static var _getMovie = Uri.parse(
-      'https://tinder-starthack-backend.herokuapp.com/get_next_movies');
+  static var _getMovie =
+      Uri.parse('https://main-starthack-backend.herokuapp.com/get_next_movies');
 
   static login(email, password, context) async {
     http.Response response = await _client.post(_loginUrl, body: {
