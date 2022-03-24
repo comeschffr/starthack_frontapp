@@ -76,6 +76,50 @@ class _DashboardState extends State<Dashboard> {
     }); // setState
   } // getData
 
+  Future appendData() async {
+    String response = await HttpService().getnextcards();
+    print("dashboard!");
+    print(jsonDecode(response)['results']);
+    List<dynamic> data = jsonDecode(response)['results'];
+    print(data[0]);
+    print("printed data");
+    setState(() {
+      usersData.addAll(data);
+
+      if (usersData.isNotEmpty) {
+        for (int i = 1; i < usersData.length; i++) {
+          _swipeItems.add(SwipeItem(
+              // content: Content(text: _names[i], color: _colors[i]),
+              content: Content(text: usersData[i]['title']),
+              likeAction: () {
+                _scaffoldKey.currentState?.showSnackBar(const SnackBar(
+                  content: Text("Liked "),
+                  //  content: Text("Liked ${_names[i]}"),
+                  duration: Duration(milliseconds: 500),
+                ));
+              },
+              nopeAction: () {
+                _scaffoldKey.currentState?.showSnackBar(SnackBar(
+                  content: Text("Nope ${usersData[i]['title']}"),
+                  duration: const Duration(milliseconds: 500),
+                ));
+              },
+              superlikeAction: () {
+                _scaffoldKey.currentState?.showSnackBar(SnackBar(
+                  content: Text("Superliked ${usersData[i]['title']}"),
+                  duration: const Duration(milliseconds: 500),
+                ));
+              },
+              onSlideUpdate: (SlideRegion? region) async {
+                print("Region $region");
+              }));
+        } //for loop
+        _matchEngine = MatchEngine(swipeItems: _swipeItems);
+        isLoading = false;
+      } //if
+    }); // setState
+  }
+
   @override
   void initState() {
     getData();
@@ -251,9 +295,15 @@ class _DashboardState extends State<Dashboard> {
                               duration: Duration(milliseconds: 500),
                             ));
                           },
-                          itemChanged: (SwipeItem item, int index) {
+                          itemChanged: (SwipeItem item, int index) async {
                             print(
-                                "item: \\\${item.content.text}, index: \\\$index");
+                                "item: ${usersData[index]['title']}, index: ${usersData[index]['movie_id']}");
+                            if (index == usersData.length - 1) {
+                              print("need to req again");
+                              setState(() {
+                                appendData();
+                              });
+                            }
                           },
                           upSwipeAllowed: true,
                           fillSpace: true,
