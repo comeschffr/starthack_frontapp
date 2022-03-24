@@ -63,22 +63,20 @@ class _ShortsPageState extends State<ShortsPage> {
         backgroundColor: Color.fromARGB(255, 26, 0, 70),
         key: _scaffoldKey,
         appBar: AppBar(
-          automaticallyImplyLeading: false,
-          systemOverlayStyle: SystemUiOverlayStyle(
-              statusBarColor: Color.fromARGB(255, 26, 0, 70)),
-          elevation: 0.0,
-          backgroundColor: Color.fromARGB(255, 26, 0, 70),
-          toolbarHeight: 50.0,
-          titleSpacing: 36.0,
-          title: const Text(
-            'Discover',
-            style: TextStyle(
-                fontSize: 30.0,
-                color: Colors.deepPurple,
-                fontWeight: FontWeight.bold),
-          ),
-          shape: Border(bottom: BorderSide(color: Colors.pink)),
-        ),
+            automaticallyImplyLeading: false,
+            systemOverlayStyle: SystemUiOverlayStyle(
+                statusBarColor: Color.fromARGB(255, 26, 0, 70)),
+            elevation: 0.0,
+            backgroundColor: Color.fromARGB(255, 26, 0, 70),
+            toolbarHeight: 50.0,
+            titleSpacing: 36.0,
+            title: const Text(
+              'Shorts',
+              style: TextStyle(
+                  fontSize: 30.0,
+                  color: Colors.deepPurple,
+                  fontWeight: FontWeight.bold),
+            )),
         body: Stack(fit: StackFit.expand, children: [
           Card(
             margin: const EdgeInsets.all(16.0),

@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:starthack_frontapp/service/http_service.dart';
 import 'package:starthack_frontapp/views/shorts.dart';
+import 'package:starthack_frontapp/views/trailers.dart';
 import 'package:swipe_cards/draggable_card.dart';
 import 'package:swipe_cards/swipe_cards.dart';
 import 'package:flutter/cupertino.dart';
@@ -47,20 +48,23 @@ class _DashboardState extends State<Dashboard> {
           _swipeItems.add(SwipeItem(
               // content: Content(text: _names[i], color: _colors[i]),
               content: Content(text: usersData[i]['title']),
-              likeAction: () {
+              likeAction: () async {
+                await HttpService.sendop(usersData[i]['movie_id'], 'right');
                 _scaffoldKey.currentState?.showSnackBar(const SnackBar(
                   content: Text("Liked "),
                   //  content: Text("Liked ${_names[i]}"),
                   duration: Duration(milliseconds: 500),
                 ));
               },
-              nopeAction: () {
+              nopeAction: () async {
+                await HttpService.sendop(usersData[i]['movie_id'], 'left');
                 _scaffoldKey.currentState?.showSnackBar(SnackBar(
                   content: Text("Nope ${usersData[i]['title']}"),
                   duration: const Duration(milliseconds: 500),
                 ));
               },
-              superlikeAction: () {
+              superlikeAction: () async {
+                await HttpService.sendop(usersData[i]['movie_id'], 'up');
                 _scaffoldKey.currentState?.showSnackBar(SnackBar(
                   content: Text("Superliked ${usersData[i]['title']}"),
                   duration: const Duration(milliseconds: 500),
@@ -91,20 +95,23 @@ class _DashboardState extends State<Dashboard> {
           _swipeItems.add(SwipeItem(
               // content: Content(text: _names[i], color: _colors[i]),
               content: Content(text: usersData[i]['title']),
-              likeAction: () {
+              likeAction: () async {
+                await HttpService.sendop(usersData[i]['movie_id'], 'right');
                 _scaffoldKey.currentState?.showSnackBar(const SnackBar(
                   content: Text("Liked "),
                   //  content: Text("Liked ${_names[i]}"),
                   duration: Duration(milliseconds: 500),
                 ));
               },
-              nopeAction: () {
+              nopeAction: () async {
+                await HttpService.sendop(usersData[i]['movie_id'], 'left');
                 _scaffoldKey.currentState?.showSnackBar(SnackBar(
                   content: Text("Nope ${usersData[i]['title']}"),
                   duration: const Duration(milliseconds: 500),
                 ));
               },
-              superlikeAction: () {
+              superlikeAction: () async {
+                await HttpService.sendop(usersData[i]['movie_id'], 'up');
                 _scaffoldKey.currentState?.showSnackBar(SnackBar(
                   content: Text("Superliked ${usersData[i]['title']}"),
                   duration: const Duration(milliseconds: 500),
@@ -128,26 +135,27 @@ class _DashboardState extends State<Dashboard> {
 
   @override
   Widget build(BuildContext context) {
+    SystemChrome.setPreferredOrientations([
+      DeviceOrientation.portraitUp,
+    ]);
     return Scaffold(
       extendBody: false,
       backgroundColor: Color.fromARGB(255, 26, 0, 70),
       key: _scaffoldKey,
       appBar: AppBar(
-        systemOverlayStyle: SystemUiOverlayStyle(
-            statusBarColor: Color.fromARGB(255, 26, 0, 70)),
-        elevation: 0.0,
-        backgroundColor: Color.fromARGB(255, 26, 0, 70),
-        toolbarHeight: 50.0,
-        titleSpacing: 36.0,
-        title: const Text(
-          'Discover',
-          style: TextStyle(
-              fontSize: 30.0,
-              color: Colors.deepPurple,
-              fontWeight: FontWeight.bold),
-        ),
-        shape: Border(bottom: BorderSide(color: Colors.pink)),
-      ),
+          systemOverlayStyle: SystemUiOverlayStyle(
+              statusBarColor: Color.fromARGB(255, 26, 0, 70)),
+          elevation: 0.0,
+          backgroundColor: Color.fromARGB(255, 26, 0, 70),
+          toolbarHeight: 50.0,
+          titleSpacing: 36.0,
+          title: const Text(
+            'Discover',
+            style: TextStyle(
+                fontSize: 30.0,
+                color: Colors.deepPurple,
+                fontWeight: FontWeight.bold),
+          )),
       body: Container(
         child: isLoading
             ? Center(child: CircularProgressIndicator())
@@ -171,9 +179,20 @@ class _DashboardState extends State<Dashboard> {
                                     borderRadius: BorderRadius.circular(24.0),
                                   ),
                                   color: Color.fromARGB(255, 0, 0, 0),
+                                  child: FittedBox(
+                                    fit: BoxFit.fill,
+                                    child: ClipRRect(
+                                      borderRadius: BorderRadius.circular(24.0),
+                                      child: Image.network(
+                                          usersData[index]['poster_url']),
+                                    ),
+                                  ),
+                                ),
+                                Positioned(
+                                  top: 0,
+                                  left: MediaQuery.of(context).size.width / 2,
                                   child: InkWell(
                                     onTap: () {
-                                      print("here");
                                       Navigator.push(
                                           context,
                                           PageRouteBuilder(
@@ -184,14 +203,36 @@ class _DashboardState extends State<Dashboard> {
                                               reverseTransitionDuration:
                                                   Duration.zero));
                                     },
-                                    child: FittedBox(
-                                      fit: BoxFit.fill,
-                                      child: ClipRRect(
-                                        borderRadius:
-                                            BorderRadius.circular(24.0),
-                                        child: Image.network(
-                                            usersData[index]['poster_url']),
-                                      ),
+                                    child: Container(
+                                      height:
+                                          MediaQuery.of(context).size.height,
+                                      width:
+                                          MediaQuery.of(context).size.width / 2,
+                                    ),
+                                  ),
+                                ),
+                                Positioned(
+                                  top: 0,
+                                  left: 0,
+                                  child: InkWell(
+                                    onTap: () {
+                                      Navigator.push(
+                                          context,
+                                          PageRouteBuilder(
+                                              pageBuilder: ((context, animation,
+                                                      secondaryAnimation) =>
+                                                  TrailerPage(
+                                                      trailerurl:
+                                                          'https://flutter.github.io/assets-for-api-docs/assets/videos/butterfly.mp4')),
+                                              transitionDuration: Duration.zero,
+                                              reverseTransitionDuration:
+                                                  Duration.zero));
+                                    },
+                                    child: Container(
+                                      height:
+                                          MediaQuery.of(context).size.height,
+                                      width:
+                                          MediaQuery.of(context).size.width / 2,
                                     ),
                                   ),
                                 ),
@@ -243,6 +284,18 @@ class _DashboardState extends State<Dashboard> {
                                                                               index]
                                                                           [
                                                                           'plot'],
+                                                                      genres: usersData[
+                                                                              index]
+                                                                          [
+                                                                          'genres'],
+                                                                      rating: usersData[
+                                                                              index]
+                                                                          [
+                                                                          'rating'],
+                                                                      top3cast:
+                                                                          usersData[index]
+                                                                              [
+                                                                              'top3_cast'],
                                                                     ))));
                                                   },
                                                   icon: Icon(
@@ -263,17 +316,11 @@ class _DashboardState extends State<Dashboard> {
                                                     softWrap: false,
                                                     style: TextStyle(
                                                       color: Colors.white,
-                                                      fontSize:
-                                                          MediaQuery.of(context)
-                                                                  .size
-                                                                  .width *
-                                                              0.87 *
-                                                              1.3 /
-                                                              usersData[index]
-                                                                      ['title']
-                                                                  .length,
+                                                      fontSize: 25,
                                                       fontWeight:
                                                           FontWeight.bold,
+                                                      overflow:
+                                                          TextOverflow.visible,
                                                     ),
                                                   ),
                                                 ),
@@ -298,7 +345,7 @@ class _DashboardState extends State<Dashboard> {
                           itemChanged: (SwipeItem item, int index) async {
                             print(
                                 "item: ${usersData[index]['title']}, index: ${usersData[index]['movie_id']}");
-                            if (index == usersData.length - 1) {
+                            if (index == usersData.length - 2) {
                               print("need to req again");
                               setState(() {
                                 appendData();
