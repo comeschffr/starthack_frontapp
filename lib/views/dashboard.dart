@@ -1,9 +1,11 @@
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:starthack_frontapp/service/http_service.dart';
 import 'package:swipe_cards/draggable_card.dart';
 import 'package:swipe_cards/swipe_cards.dart';
+import 'package:flutter/cupertino.dart';
 
 import 'detailpage.dart';
 import 'package:http/http.dart' as http;
@@ -30,11 +32,18 @@ class _DashboardState extends State<Dashboard> {
       GlobalKey<ScaffoldMessengerState>();
 
   Future getData() async {
-    String response = await HttpService().getnextcard();
-    print("DASHRBOARD!!!");
-    print(jsonDecode(response)['results']);
-
-    List<dynamic> data = jsonDecode(response)['results'];
+    //String response = await HttpService().getnextcard();
+    //print(jsonDecode(response)['results']);
+    List<dynamic> data = [
+      {
+        "movie_id": 603,
+        "title": "The Matrix 1",
+        "release_date": '1999',
+        "poster_url":
+            "https://m.media-amazon.com/images/M/MV5BNzQzOTk3OTAtNDQ0Zi00ZTVkLWI0MTEtMDllZjNkYzNjNTc4L2ltYWdlXkEyXkFqcGdeQXVyNjU0OTQ0OTY@._V1_FMjpg_UX1000_.jpg",
+        "trailer_url": "https://www.youtube.com/watch?v=vKQi3bBA1y8",
+      }
+    ];
     print(data[0]);
     print("printed data");
     setState(() {
@@ -42,9 +51,10 @@ class _DashboardState extends State<Dashboard> {
 
       if (usersData.isNotEmpty) {
         for (int i = 0; i < usersData.length; i++) {
+          print(usersData[i]);
           _swipeItems.add(SwipeItem(
               // content: Content(text: _names[i], color: _colors[i]),
-              content: Content(text: usersData[i]['name']),
+              content: Content(text: usersData[i]['title']),
               likeAction: () {
                 _scaffoldKey.currentState?.showSnackBar(const SnackBar(
                   content: Text("Liked "),
@@ -54,13 +64,13 @@ class _DashboardState extends State<Dashboard> {
               },
               nopeAction: () {
                 _scaffoldKey.currentState?.showSnackBar(SnackBar(
-                  content: Text("Nope ${usersData[i]['name']}"),
+                  content: Text("Nope ${usersData[i]['title']}"),
                   duration: const Duration(milliseconds: 500),
                 ));
               },
               superlikeAction: () {
                 _scaffoldKey.currentState?.showSnackBar(SnackBar(
-                  content: Text("Superliked ${usersData[i]['name']}"),
+                  content: Text("Superliked ${usersData[i]['title']}"),
                   duration: const Duration(milliseconds: 500),
                 ));
               },
@@ -83,13 +93,15 @@ class _DashboardState extends State<Dashboard> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      extendBody: true,
-      backgroundColor: Colors.indigo[50],
+      extendBody: false,
+      backgroundColor: Color.fromARGB(255, 26, 0, 70),
       key: _scaffoldKey,
       appBar: AppBar(
+        systemOverlayStyle: SystemUiOverlayStyle(
+            statusBarColor: Color.fromARGB(255, 26, 0, 70)),
         elevation: 0.0,
-        backgroundColor: Colors.white,
-        toolbarHeight: 72.0,
+        backgroundColor: Color.fromARGB(255, 26, 0, 70),
+        toolbarHeight: 50.0,
         titleSpacing: 36.0,
         title: const Text(
           'Discover',
@@ -98,302 +110,280 @@ class _DashboardState extends State<Dashboard> {
               color: Colors.deepPurple,
               fontWeight: FontWeight.bold),
         ),
-        actions: const <Widget>[
-          Padding(
-            padding: EdgeInsets.fromLTRB(0, 0, 16.0, 0),
-            child: CircleAvatar(
-              backgroundColor: Colors.white,
-              child: Icon(
-                Icons.format_align_left_rounded,
-                color: Colors.deepPurple,
-                size: 24.0,
-              ),
-            ),
-          ),
-        ],
+        shape: Border(bottom: BorderSide(color: Colors.pink)),
       ),
-      body: Center(
+      body: Container(
         child: isLoading
             ? const CircularProgressIndicator()
-            : Column(
-                crossAxisAlignment: CrossAxisAlignment.stretch,
+            : Stack(
                 children: <Widget>[
-                  Center(
-                    child: SizedBox(
-                      height: MediaQuery.of(context).size.height * 0.6,
-                      child: SwipeCards(
-                        matchEngine: _matchEngine!,
-                        itemBuilder: (BuildContext context, int index) {
-                          return Stack(
-                            fit: StackFit.expand,
-                            children: <Widget>[
-                              Card(
-                                margin: const EdgeInsets.all(16.0),
-                                shadowColor: Colors.deepPurple,
-                                elevation: 12.0,
-                                shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(24.0),
-                                ),
-                                color: Colors.white,
-                                child: Padding(
-                                  padding: const EdgeInsets.all(4.0),
-                                  child: ClipRRect(
+                  Positioned(
+                    child: Container(
+                      child: SizedBox(
+                        height: MediaQuery.of(context).size.height * 0.8,
+                        child: SwipeCards(
+                          matchEngine: _matchEngine!,
+                          itemBuilder: (BuildContext context, int index) {
+                            return Stack(
+                              fit: StackFit.expand,
+                              children: <Widget>[
+                                Card(
+                                  margin: const EdgeInsets.all(16.0),
+                                  shadowColor: Colors.deepPurple,
+                                  elevation: 12.0,
+                                  shape: RoundedRectangleBorder(
                                     borderRadius: BorderRadius.circular(24.0),
-                                    child: Image.asset(
-                                      "images/superman.jpeg",
+                                  ),
+                                  color: Color.fromARGB(255, 0, 0, 0),
+                                  child: FittedBox(
+                                    fit: BoxFit.fill,
+                                    child: ClipRRect(
+                                      borderRadius: BorderRadius.circular(24.0),
+                                      child: Image.network(
+                                          usersData[index]['poster_url']),
                                     ),
                                   ),
                                 ),
-                              ),
-                              Container(
-                                margin: const EdgeInsets.all(20.0),
-                                decoration: const BoxDecoration(
-                                    borderRadius:
-                                        BorderRadius.all(Radius.circular(24.0)),
-                                    color: Colors.black26),
-                              ),
-                              Align(
-                                alignment: Alignment.bottomCenter,
-                                child: Container(
-                                  // alignment: Alignment.bottomCenter,
-                                  height: 72.0,
-                                  decoration: const BoxDecoration(
-                                      borderRadius: BorderRadius.only(
-                                        bottomLeft: Radius.circular(24.0),
-                                        bottomRight: Radius.circular(24.0),
-                                      ),
-                                      color: Colors.white24),
-                                  margin: const EdgeInsets.fromLTRB(
-                                      24.0, 40.0, 24.0, 24.0),
-                                  child: Row(
-                                    mainAxisAlignment:
-                                        MainAxisAlignment.spaceBetween,
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.center,
-                                    children: <Widget>[
-                                      Column(
-                                        crossAxisAlignment:
-                                            CrossAxisAlignment.start,
-                                        children: <Widget>[
-                                          Flexible(
-                                            child: Padding(
-                                              padding:
-                                                  const EdgeInsets.all(4.0),
-                                              child: Text(
-                                                usersData[index]['name'] +
-                                                    ", " +
-                                                    usersData[index]['world'],
-                                                overflow: TextOverflow.ellipsis,
-                                                maxLines: 1,
-                                                softWrap: false,
-                                                style: const TextStyle(
-                                                  color: Colors.white,
-                                                  fontSize: 26,
-                                                  fontWeight: FontWeight.bold,
+                                Positioned(
+                                  top: 430,
+                                  child: Container(
+                                    // alignment: Alignment.bottomCenter,
+                                    height: 50.0,
+                                    width: MediaQuery.of(context).size.width *
+                                        0.87,
+                                    decoration: BoxDecoration(
+                                        borderRadius:
+                                            BorderRadius.circular(10.0),
+                                        color: Color.fromARGB(204, 2, 0, 0)),
+                                    margin: const EdgeInsets.fromLTRB(
+                                        24.0, 40.0, 24.0, 24.0),
+                                    child: Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.start,
+                                      children: <Widget>[
+                                        Column(
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.start,
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.center,
+                                          children: <Widget>[
+                                            Flexible(
+                                              child: Padding(
+                                                padding:
+                                                    const EdgeInsets.all(4.0),
+                                                child: FittedBox(
+                                                  fit: BoxFit.fitWidth,
+                                                  child: TextButton.icon(
+                                                    onPressed: () {
+                                                      Navigator.push(
+                                                          context,
+                                                          MaterialPageRoute(
+                                                              builder:
+                                                                  ((context) =>
+                                                                      DetailsPage(
+                                                                        title: usersData[index]
+                                                                            [
+                                                                            'title'],
+                                                                        releasedate:
+                                                                            usersData[index]['release_date'],
+                                                                        posterurl:
+                                                                            usersData[index]['poster_url'],
+                                                                      ))));
+                                                    },
+                                                    icon: Icon(
+                                                      CupertinoIcons.info,
+                                                      color: Colors.white,
+                                                      size:
+                                                          MediaQuery.of(context)
+                                                                  .size
+                                                                  .width *
+                                                              0.1,
+                                                    ),
+                                                    label: Text(
+                                                      usersData[index]
+                                                              ["title"] +
+                                                          ", " +
+                                                          usersData[index]
+                                                              ["release_date"],
+                                                      overflow:
+                                                          TextOverflow.ellipsis,
+                                                      maxLines: 1,
+                                                      softWrap: false,
+                                                      style: TextStyle(
+                                                        color: Colors.white,
+                                                        fontSize: MediaQuery.of(
+                                                                    context)
+                                                                .size
+                                                                .width *
+                                                            0.87 *
+                                                            1.1 /
+                                                            usersData[index]
+                                                                    ['title']
+                                                                .length,
+                                                        fontWeight:
+                                                            FontWeight.bold,
+                                                      ),
+                                                    ),
+                                                  ),
                                                 ),
                                               ),
                                             ),
-                                          ),
-                                        ],
-                                      ),
-                                      Padding(
-                                        padding: const EdgeInsets.all(8.0),
-                                        child: ElevatedButton.icon(
-                                          onPressed: () {
-                                            Navigator.push(
-                                              context,
-                                              MaterialPageRoute(
-                                                builder: (context) =>
-                                                    DetailsPage(
-                                                        name: usersData[index]
-                                                            ['name'],
-                                                        world: usersData[index]
-                                                            ['world']),
-                                              ),
-                                            );
-                                          },
-                                          icon: const Icon(
-                                            Icons.directions_sharp,
-                                            color: Colors.white,
-                                          ),
-                                          label: const Text(
-                                            "Profile",
-                                            style: TextStyle(
-                                              color: Colors.white,
-                                              fontSize: 14.0,
-                                              overflow: TextOverflow.ellipsis,
-                                              fontWeight: FontWeight.bold,
-                                            ),
-                                          ),
-                                          style: ElevatedButton.styleFrom(
-                                            shape: RoundedRectangleBorder(
-                                              borderRadius:
-                                                  BorderRadius.circular(30.0),
-                                            ),
-                                            elevation: 8.0,
-                                            shadowColor: Colors.deepPurple,
-                                          ),
+                                          ],
                                         ),
-                                      ),
-                                    ],
+                                      ],
+                                    ),
                                   ),
                                 ),
-                              ),
-                            ],
-                          );
-                        },
-                        onStackFinished: () {
-                          _scaffoldKey.currentState!
-                              .showSnackBar(const SnackBar(
-                            content: Text("Stack Finished"),
-                            duration: Duration(milliseconds: 500),
-                          ));
-                        },
-                        itemChanged: (SwipeItem item, int index) {
-                          print("item: ${item.content.text}, index: $index");
-                        },
-                        upSwipeAllowed: true,
-                        fillSpace: true,
+                              ],
+                            );
+                          },
+                          onStackFinished: () {
+                            _scaffoldKey.currentState!
+                                .showSnackBar(const SnackBar(
+                              content: Text("Stack Finished"),
+                              duration: Duration(milliseconds: 500),
+                            ));
+                          },
+                          itemChanged: (SwipeItem item, int index) {
+                            print(
+                                "item: \\\${item.content.text}, index: \\\$index");
+                          },
+                          upSwipeAllowed: true,
+                          fillSpace: true,
+                        ),
                       ),
                     ),
                   ),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                    children: [
-                      Container(
-                        decoration: const BoxDecoration(
-                          color: Colors.white,
-                          shape: BoxShape.circle,
-                          boxShadow: [
-                            BoxShadow(
-                                blurRadius: 10,
-                                color: Colors.black,
-                                spreadRadius: 2)
-                          ],
-                        ),
-                        child: CircleAvatar(
-                          backgroundColor: Colors.white,
-                          child: IconButton(
-                            icon: const Icon(
-                              Icons.thumb_down_alt_rounded,
-                              color: Colors.red,
-                            ),
-                            onPressed: () {
-                              _matchEngine!.currentItem?.nope();
-                            },
-                            // child: const Text("Nope"),
-                          ),
-                        ),
-                      ),
-                      Container(
-                        decoration: const BoxDecoration(
-                          color: Colors.white,
-                          shape: BoxShape.circle,
-                          boxShadow: [
-                            BoxShadow(
-                                blurRadius: 10,
-                                color: Colors.black,
-                                spreadRadius: 2)
-                          ],
-                        ),
-                        child: CircleAvatar(
-                          radius: 36.0,
-                          backgroundColor: Colors.white,
-                          child: CircleAvatar(
-                            radius: 32.0,
-                            backgroundColor: Colors.deepPurple,
-                            child: Center(
-                              child: IconButton(
-                                icon: const Icon(
-                                  Icons.favorite,
-                                  color: Colors.white,
-                                  size: 36.0,
+                  Positioned.fill(
+                    child: Align(
+                      alignment: Alignment.bottomCenter,
+                      child: Container(
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                          children: [
+                            Container(
+                              decoration: const BoxDecoration(
+                                color: Colors.white,
+                                shape: BoxShape.circle,
+                                boxShadow: [
+                                  BoxShadow(
+                                      blurRadius: 10,
+                                      color: Colors.black,
+                                      spreadRadius: 2)
+                                ],
+                              ),
+                              child: CircleAvatar(
+                                backgroundColor: Colors.white,
+                                child: IconButton(
+                                  icon: const Icon(
+                                    CupertinoIcons.clear,
+                                    color: Colors.red,
+                                  ),
+                                  onPressed: () {
+                                    _matchEngine!.currentItem?.nope();
+                                  },
+                                  // child: const Text("Nope"),
                                 ),
-                                onPressed: () {
-                                  _matchEngine!.currentItem?.superLike();
-                                },
-                                //child: const Text("Superlike"),
                               ),
                             ),
-                          ),
-                        ),
-                      ),
-                      Container(
-                        decoration: const BoxDecoration(
-                          color: Colors.white,
-                          shape: BoxShape.circle,
-                          boxShadow: [
-                            BoxShadow(
-                                blurRadius: 10,
-                                color: Colors.black,
-                                spreadRadius: 2)
+                            Container(
+                              decoration: const BoxDecoration(
+                                color: Colors.white,
+                                shape: BoxShape.circle,
+                                boxShadow: [
+                                  BoxShadow(
+                                      blurRadius: 10,
+                                      color: Colors.black,
+                                      spreadRadius: 2)
+                                ],
+                              ),
+                              child: CircleAvatar(
+                                radius: 36.0,
+                                backgroundColor: Colors.white,
+                                child: CircleAvatar(
+                                  radius: 32.0,
+                                  backgroundColor: Colors.deepPurple,
+                                  child: IconButton(
+                                    padding: EdgeInsets.zero,
+                                    icon: Icon(
+                                      Icons.star,
+                                      color: Colors.white,
+                                      size: 40.0,
+                                    ),
+                                    onPressed: () {
+                                      _matchEngine!.currentItem?.superLike();
+                                    },
+                                    //child: const Text("Superlike"),
+                                  ),
+                                ),
+                              ),
+                            ),
+                            Container(
+                              decoration: const BoxDecoration(
+                                color: Colors.white,
+                                shape: BoxShape.circle,
+                                boxShadow: [
+                                  BoxShadow(
+                                      blurRadius: 10,
+                                      color: Colors.black,
+                                      spreadRadius: 2)
+                                ],
+                              ),
+                              child: CircleAvatar(
+                                backgroundColor: Colors.white,
+                                child: IconButton(
+                                  icon: const Icon(
+                                    CupertinoIcons.heart_fill,
+                                    color: Colors.lightGreen,
+                                  ),
+                                  onPressed: () {
+                                    _matchEngine!.currentItem?.like();
+                                  },
+                                  //  child: const Text("Like"),
+                                ),
+                              ),
+                            )
                           ],
                         ),
-                        child: CircleAvatar(
-                          backgroundColor: Colors.white,
-                          child: IconButton(
-                            icon: const Icon(
-                              Icons.thumb_up_alt_rounded,
-                              color: Colors.red,
-                            ),
-                            onPressed: () {
-                              _matchEngine!.currentItem?.like();
-                            },
-                            //  child: const Text("Like"),
-                          ),
-                        ),
-                      )
-                    ],
+                      ),
+                    ),
                   ),
                 ],
               ),
       ),
-      bottomNavigationBar: SizedBox(
-        height: 72,
-        child: ClipRRect(
-          borderRadius: const BorderRadius.only(
-            topLeft: Radius.circular(50.0),
-            topRight: Radius.circular(50.0),
-          ),
+      bottomNavigationBar: ClipRRect(
+        borderRadius: BorderRadius.circular(20.0),
+        child: Padding(
+          padding: const EdgeInsets.fromLTRB(0.0, 15.0, 0.0, 0.0),
           child: BottomNavigationBar(
-            backgroundColor: Colors.white,
+            type: BottomNavigationBarType.fixed,
+            backgroundColor: Color.fromARGB(255, 26, 0, 70),
             showSelectedLabels: false,
             showUnselectedLabels: false,
-            selectedItemColor: Colors.deepPurple,
-            unselectedItemColor: Colors.purple[200],
+            selectedItemColor: Colors.purple[100],
+            unselectedItemColor: Colors.white,
             iconSize: 24.0,
             enableFeedback: true,
             mouseCursor: MouseCursor.uncontrolled,
             elevation: 16.0,
             items: <BottomNavigationBarItem>[
               BottomNavigationBarItem(
-                icon: Container(
-                  decoration: const BoxDecoration(
-                      color: Colors.deepPurple, shape: BoxShape.circle),
-                  child: const Padding(
-                    padding: EdgeInsets.all(2.0),
-                    child: Icon(
-                      Icons.home,
-                      size: 36,
-                      color: Colors.white,
-                    ),
-                  ),
-                ),
-                label: "Home",
+                icon: Icon(CupertinoIcons.home),
+                label: 'home',
               ),
-              const BottomNavigationBarItem(
-                label: "Matches",
-                icon: Icon(
-                  Icons.favorite_border,
-                  color: Colors.deepPurple,
-                ),
+              BottomNavigationBarItem(
+                icon: Icon(CupertinoIcons.search),
+                label: 'search',
               ),
-              const BottomNavigationBarItem(
-                  label: "Settings",
-                  icon: Icon(
-                    Icons.settings,
-                    color: Colors.deepPurple,
-                  )),
+              BottomNavigationBarItem(
+                icon: Icon(CupertinoIcons.play_arrow),
+                label: 'shorts',
+              ),
+              BottomNavigationBarItem(
+                  icon: Icon(CupertinoIcons.bookmark_fill),
+                  label: 'recommendations'),
+              BottomNavigationBarItem(
+                  icon: Icon(CupertinoIcons.profile_circled), label: "profile")
             ],
           ),
         ),

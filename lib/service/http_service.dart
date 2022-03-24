@@ -6,7 +6,6 @@ import 'package:flutter/cupertino.dart';
 import 'package:http/http.dart' as http;
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:starthack_frontapp/views/dashboard.dart';
-import 'package:starthack_frontapp/views/welcome.dart';
 
 class HttpService {
   static final _client = http.Client();
@@ -17,8 +16,8 @@ class HttpService {
   static var _registerUrl =
       Uri.parse('https://tinder-starthack-backend.herokuapp.com/register');
 
-  static var _getHeros =
-      Uri.parse('https://tinder-starthack-backend.herokuapp.com/get_heros');
+  static var _getMovie = Uri.parse(
+      'https://tinder-starthack-backend.herokuapp.com/get_next_movie');
 
   static login(email, password, context) async {
     http.Response response = await _client.post(_loginUrl, body: {
@@ -66,7 +65,7 @@ class HttpService {
   }
 
   Future<String> getnextcard() async {
-    final response = await http.get(_getHeros);
+    final response = await http.get(_getMovie);
 
     if (response.statusCode == 200) {
       // If the server did return a 200 OK response,
