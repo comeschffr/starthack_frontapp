@@ -146,6 +146,7 @@ Widget BuildItem(
                       genres: genres,
                       rating: rating,
                       top3cast: top3cast,
+                      color: Color.fromARGB(255, 26, 0, 70),
                     ))));
       },
       child: Card(

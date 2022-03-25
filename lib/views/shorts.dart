@@ -6,7 +6,9 @@ import 'package:video_player/video_player.dart';
 
 class ShortsPage extends StatefulWidget {
   final List shortslist;
-  const ShortsPage({Key? key, required this.shortslist}) : super(key: key);
+  final Color color;
+  const ShortsPage({Key? key, required this.shortslist, required this.color})
+      : super(key: key);
 
   @override
   State<ShortsPage> createState() => _ShortsPageState();
@@ -57,14 +59,14 @@ class _ShortsPageState extends State<ShortsPage> {
   Widget build(BuildContext context) {
     return Scaffold(
         extendBody: false,
-        backgroundColor: Color.fromARGB(255, 26, 0, 70),
+        backgroundColor: widget.color,
         key: _scaffoldKey,
         appBar: AppBar(
             automaticallyImplyLeading: false,
-            systemOverlayStyle: SystemUiOverlayStyle(
-                statusBarColor: Color.fromARGB(255, 26, 0, 70)),
+            systemOverlayStyle:
+                SystemUiOverlayStyle(statusBarColor: widget.color),
             elevation: 0.0,
-            backgroundColor: Color.fromARGB(255, 26, 0, 70),
+            backgroundColor: widget.color,
             toolbarHeight: 50.0,
             titleSpacing: 36.0,
             title: const Text(

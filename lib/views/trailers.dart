@@ -7,8 +7,10 @@ import 'package:youtube_player_flutter/youtube_player_flutter.dart';
 
 class TrailerPage extends StatefulWidget {
   final String trailerurl;
+  final Color color;
 
-  TrailerPage({Key? key, required this.trailerurl}) : super(key: key);
+  TrailerPage({Key? key, required this.trailerurl, required this.color})
+      : super(key: key);
 
   @override
   State<TrailerPage> createState() => _TrailerPageState();
@@ -56,7 +58,7 @@ class _TrailerPageState extends State<TrailerPage> {
       player: YoutubePlayer(controller: controller),
       builder: (context, player) => Scaffold(
             extendBody: false,
-            backgroundColor: Color.fromARGB(255, 26, 0, 70),
+            backgroundColor: widget.color,
             key: _scaffoldKey,
             body: Stack(
               fit: StackFit.expand,

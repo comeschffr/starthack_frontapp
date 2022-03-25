@@ -7,6 +7,7 @@ class DetailsPage extends StatefulWidget {
   final String title, releasedate, posterurl, plot;
   final double rating;
   final List genres, top3cast;
+  final Color color;
 
   DetailsPage(
       {Key? key,
@@ -16,7 +17,8 @@ class DetailsPage extends StatefulWidget {
       required this.plot,
       required this.genres,
       required this.rating,
-      required this.top3cast})
+      required this.top3cast,
+      required this.color})
       : super(key: key);
 
   @override
@@ -27,10 +29,10 @@ class _DetailsPageState extends State<DetailsPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Color.fromARGB(255, 26, 0, 70),
+      backgroundColor: widget.color,
       body: Container(
         margin: const EdgeInsets.only(top: kToolbarHeight - 50),
-        color: Color.fromARGB(255, 26, 0, 70),
+        color: widget.color,
         child: Expanded(
           child: SingleChildScrollView(
             scrollDirection: Axis.vertical,

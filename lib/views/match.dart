@@ -19,14 +19,14 @@ class Content {
   Content({this.text});
 }
 
-class Dashboard extends StatefulWidget {
-  const Dashboard({Key? key}) : super(key: key);
+class MatchPage extends StatefulWidget {
+  const MatchPage({Key? key}) : super(key: key);
 
   @override
-  _DashboardState createState() => _DashboardState();
+  _MatchPageState createState() => _MatchPageState();
 }
 
-class _DashboardState extends State<Dashboard> {
+class _MatchPageState extends State<MatchPage> {
   bool isLoading = true;
   late List usersData;
   final List<SwipeItem> _swipeItems = <SwipeItem>[];
@@ -36,7 +36,7 @@ class _DashboardState extends State<Dashboard> {
 
   Future getData() async {
     String response = await HttpService().getnextcards();
-    print("dashboard!");
+    print("Matches!");
     print(jsonDecode(response)['results']);
     List<dynamic> data = jsonDecode(response)['results'];
     print(data[0]);
@@ -81,53 +81,6 @@ class _DashboardState extends State<Dashboard> {
     }); // setState
   } // getData
 
-  Future appendData() async {
-    String response = await HttpService().getnextcards();
-    print("dashboard!");
-    print(jsonDecode(response)['results']);
-    List<dynamic> data = jsonDecode(response)['results'];
-    print(data[0]);
-    print("printed data");
-    setState(() {
-      usersData.addAll(data);
-
-      if (usersData.isNotEmpty) {
-        for (int i = 1; i < usersData.length; i++) {
-          _swipeItems.add(SwipeItem(
-              // content: Content(text: _names[i], color: _colors[i]),
-              content: Content(text: usersData[i]['title']),
-              likeAction: () async {
-                await HttpService.sendop(usersData[i]['movie_id'], 'right');
-                _scaffoldKey.currentState?.showSnackBar(const SnackBar(
-                  content: Text("Liked "),
-                  //  content: Text("Liked ${_names[i]}"),
-                  duration: Duration(milliseconds: 500),
-                ));
-              },
-              nopeAction: () async {
-                await HttpService.sendop(usersData[i]['movie_id'], 'left');
-                _scaffoldKey.currentState?.showSnackBar(SnackBar(
-                  content: Text("Nope ${usersData[i]['title']}"),
-                  duration: const Duration(milliseconds: 500),
-                ));
-              },
-              superlikeAction: () async {
-                await HttpService.sendop(usersData[i]['movie_id'], 'up');
-                _scaffoldKey.currentState?.showSnackBar(SnackBar(
-                  content: Text("Superliked ${usersData[i]['title']}"),
-                  duration: const Duration(milliseconds: 500),
-                ));
-              },
-              onSlideUpdate: (SlideRegion? region) async {
-                print("Region $region");
-              }));
-        } //for loop
-        _matchEngine = MatchEngine(swipeItems: _swipeItems);
-        isLoading = false;
-      } //if
-    }); // setState
-  }
-
   @override
   void initState() {
     getData();
@@ -143,20 +96,20 @@ class _DashboardState extends State<Dashboard> {
     ]);
     return Scaffold(
       extendBody: false,
-      backgroundColor: Color.fromARGB(255, 26, 0, 70),
+      backgroundColor: Color.fromARGB(255, 245, 23, 215),
       key: _scaffoldKey,
       appBar: AppBar(
           systemOverlayStyle: SystemUiOverlayStyle(
-              statusBarColor: Color.fromARGB(255, 26, 0, 70)),
+              statusBarColor: Color.fromARGB(255, 245, 23, 215)),
           elevation: 0.0,
-          backgroundColor: Color.fromARGB(255, 26, 0, 70),
+          backgroundColor: Color.fromARGB(255, 245, 23, 215),
           toolbarHeight: 50.0,
           titleSpacing: 36.0,
           title: const Text(
-            'Discover',
+            'Match',
             style: TextStyle(
                 fontSize: 30.0,
-                color: Colors.deepPurple,
+                color: Colors.white,
                 fontWeight: FontWeight.bold),
           )),
       body: Container(
@@ -176,12 +129,12 @@ class _DashboardState extends State<Dashboard> {
                               children: <Widget>[
                                 Card(
                                   margin: const EdgeInsets.all(16.0),
-                                  shadowColor: Colors.deepPurple,
+                                  shadowColor: Color.fromARGB(255, 146, 137, 3),
                                   elevation: 12.0,
                                   shape: RoundedRectangleBorder(
                                     borderRadius: BorderRadius.circular(24.0),
                                   ),
-                                  color: Color.fromARGB(255, 0, 0, 0),
+                                  color: Color.fromARGB(255, 153, 0, 133),
                                   child: FittedBox(
                                     fit: BoxFit.fill,
                                     child: ClipRRect(
@@ -205,7 +158,7 @@ class _DashboardState extends State<Dashboard> {
                                                     shortslist: usersData[index]
                                                         ['shorts_urls'],
                                                     color: Color.fromARGB(
-                                                        255, 26, 0, 70),
+                                                        255, 153, 0, 133),
                                                   )),
                                               transitionDuration: Duration.zero,
                                               reverseTransitionDuration:
@@ -230,11 +183,11 @@ class _DashboardState extends State<Dashboard> {
                                               pageBuilder: ((context, animation,
                                                       secondaryAnimation) =>
                                                   TrailerPage(
-                                                      trailerurl:
-                                                          usersData[index]
-                                                              ['trailer_url'],
-                                                      color: Color.fromARGB(
-                                                          255, 26, 0, 70))),
+                                                    trailerurl: usersData[index]
+                                                        ['trailer_url'],
+                                                    color: Color.fromARGB(
+                                                        255, 153, 0, 133),
+                                                  )),
                                               transitionDuration: Duration.zero,
                                               reverseTransitionDuration:
                                                   Duration.zero));
@@ -277,27 +230,42 @@ class _DashboardState extends State<Dashboard> {
                                                     Navigator.push(
                                                         context,
                                                         MaterialPageRoute(
-                                                            builder: ((context) => DetailsPage(
-                                                                title: usersData[index]
-                                                                    ['title'],
-                                                                releasedate:
-                                                                    usersData[index]['release_date']
-                                                                        .toString(),
-                                                                posterurl: usersData[index][
-                                                                    'poster_url'],
-                                                                plot: usersData[index]
-                                                                    ['plot'],
-                                                                genres: usersData[index]
-                                                                    ['genres'],
-                                                                rating: usersData[index]
-                                                                    ['rating'],
-                                                                top3cast: usersData[index][
-                                                                    'top3_cast'],
-                                                                color: Color.fromARGB(
-                                                                    255,
-                                                                    26,
-                                                                    0,
-                                                                    70)))));
+                                                            builder:
+                                                                ((context) =>
+                                                                    DetailsPage(
+                                                                      title: usersData[
+                                                                              index]
+                                                                          [
+                                                                          'title'],
+                                                                      releasedate:
+                                                                          usersData[index]['release_date']
+                                                                              .toString(),
+                                                                      posterurl:
+                                                                          usersData[index]
+                                                                              [
+                                                                              'poster_url'],
+                                                                      plot: usersData[
+                                                                              index]
+                                                                          [
+                                                                          'plot'],
+                                                                      genres: usersData[
+                                                                              index]
+                                                                          [
+                                                                          'genres'],
+                                                                      rating: usersData[
+                                                                              index]
+                                                                          [
+                                                                          'rating'],
+                                                                      top3cast:
+                                                                          usersData[index]
+                                                                              [
+                                                                              'top3_cast'],
+                                                                      color: Color.fromARGB(
+                                                                          255,
+                                                                          153,
+                                                                          0,
+                                                                          133),
+                                                                    ))));
                                                   },
                                                   icon: Icon(
                                                     CupertinoIcons.info,
@@ -342,16 +310,11 @@ class _DashboardState extends State<Dashboard> {
                               content: Text("Stack Finished"),
                               duration: Duration(milliseconds: 500),
                             ));
+                            Navigator.pop(context);
                           },
                           itemChanged: (SwipeItem item, int index) async {
                             print(
                                 "item: ${usersData[index]['title']}, index: ${usersData[index]['movie_id']}");
-                            if (index == usersData.length - 2) {
-                              print("need to req again");
-                              setState(() {
-                                appendData();
-                              });
-                            }
                           },
                           upSwipeAllowed: true,
                           fillSpace: true,
@@ -462,45 +425,25 @@ class _DashboardState extends State<Dashboard> {
           padding: const EdgeInsets.fromLTRB(0.0, 15.0, 0.0, 0.0),
           child: BottomNavigationBar(
             type: BottomNavigationBarType.fixed,
-            backgroundColor: Color.fromARGB(255, 26, 0, 70),
+            backgroundColor: Color.fromARGB(255, 245, 23, 215),
             showSelectedLabels: false,
             showUnselectedLabels: false,
-            selectedItemColor: Colors.white,
-            unselectedItemColor: Colors.white,
+            selectedItemColor: Color.fromARGB(0, 255, 255, 255),
+            unselectedItemColor: Color.fromARGB(0, 255, 255, 255),
             iconSize: 24.0,
             enableFeedback: true,
             mouseCursor: MouseCursor.uncontrolled,
-            elevation: 16.0,
+            elevation: 0.0,
+            onTap: null,
             items: <BottomNavigationBarItem>[
               BottomNavigationBarItem(
-                icon: Icon(CupertinoIcons.home),
+                icon: Icon(CupertinoIcons.star),
                 label: 'home',
               ),
               BottomNavigationBarItem(
-                icon: Icon(CupertinoIcons.search),
+                icon: Icon(CupertinoIcons.star),
                 label: 'search',
               ),
-              BottomNavigationBarItem(
-                icon: Icon(CupertinoIcons.play_arrow),
-                label: 'shorts',
-              ),
-              BottomNavigationBarItem(
-                  icon: IconButton(
-                    icon: Icon(CupertinoIcons.bookmark),
-                    onPressed: () {
-                      Navigator.pushReplacement(
-                          context,
-                          PageRouteBuilder(
-                              pageBuilder:
-                                  ((context, animation, secondaryAnimation) =>
-                                      RecommendationsPage()),
-                              transitionDuration: Duration.zero,
-                              reverseTransitionDuration: Duration.zero));
-                    },
-                  ),
-                  label: 'recommendations'),
-              BottomNavigationBarItem(
-                  icon: Icon(CupertinoIcons.profile_circled), label: "profile")
             ],
           ),
         ),
