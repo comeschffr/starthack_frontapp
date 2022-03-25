@@ -35,21 +35,15 @@ class _DashboardState extends State<Dashboard> {
   final GlobalKey<ScaffoldMessengerState> _scaffoldKey =
       GlobalKey<ScaffoldMessengerState>();
 
+  late String response;
+
   Future getData() async {
-    String response = await HttpService().getnextcards();
-    print("dashboard!");
-    print(jsonDecode(response)['results']);
-    List<dynamic> data = jsonDecode(response)['results'];
-    print(data[0]);
-    print("printed data");
+    return await HttpService().getnextcards();
+  } // getData
+
+  void createCards(response, data) {
     if (jsonDecode(response)['match'] == true) {
-      Navigator.pushReplacement(
-          context,
-          PageRouteBuilder(
-              pageBuilder: ((context, animation, secondaryAnimation) =>
-                  MatchPage(content: data)),
-              transitionDuration: Duration.zero,
-              reverseTransitionDuration: Duration.zero));
+      Navigator.of(context).pushReplacement(_createRoute(data));
     } else {
       setState(() {
         usersData = data;
@@ -90,68 +84,16 @@ class _DashboardState extends State<Dashboard> {
         } //if
       });
     } // setState
-  } // getData
+  }
 
-  Future appendData() async {
-    String response = await HttpService().getnextcards();
-    print("dashboard!");
-    print(jsonDecode(response)['results']);
-    List<dynamic> data = jsonDecode(response)['results'];
-    print(data[0]);
-    print("printed data");
-    if (jsonDecode(response)['match'] == true) {
-      Navigator.pushReplacement(
-          context,
-          PageRouteBuilder(
-              pageBuilder: ((context, animation, secondaryAnimation) =>
-                  MatchPage(content: data)),
-              transitionDuration: Duration.zero,
-              reverseTransitionDuration: Duration.zero));
-    } else {
-      setState(() {
-        usersData.addAll(data);
-
-        if (usersData.isNotEmpty) {
-          for (int i = 1; i < usersData.length; i++) {
-            _swipeItems.add(SwipeItem(
-                // content: Content(text: _names[i], color: _colors[i]),
-                content: Content(text: usersData[i]['title']),
-                likeAction: () async {
-                  await HttpService.sendop(usersData[i]['movie_id'], 'right');
-                  _scaffoldKey.currentState?.showSnackBar(const SnackBar(
-                    content: Text("Liked "),
-                    //  content: Text("Liked ${_names[i]}"),
-                    duration: Duration(milliseconds: 500),
-                  ));
-                },
-                nopeAction: () async {
-                  await HttpService.sendop(usersData[i]['movie_id'], 'left');
-                  _scaffoldKey.currentState?.showSnackBar(SnackBar(
-                    content: Text("Nope ${usersData[i]['title']}"),
-                    duration: const Duration(milliseconds: 500),
-                  ));
-                },
-                superlikeAction: () async {
-                  await HttpService.sendop(usersData[i]['movie_id'], 'up');
-                  _scaffoldKey.currentState?.showSnackBar(SnackBar(
-                    content: Text("Superliked ${usersData[i]['title']}"),
-                    duration: const Duration(milliseconds: 500),
-                  ));
-                },
-                onSlideUpdate: (SlideRegion? region) async {
-                  print("Region $region");
-                }));
-          } //for loop
-          _matchEngine = MatchEngine(swipeItems: _swipeItems);
-          isLoading = false;
-        } //if
-      }); // setState
-    }
+  void initCards() async {
+    response = await getData();
+    createCards(response, jsonDecode(response)['results']);
   }
 
   @override
   void initState() {
-    getData();
+    initCards();
     super.initState();
   }
 
@@ -367,10 +309,17 @@ class _DashboardState extends State<Dashboard> {
                           itemChanged: (SwipeItem item, int index) async {
                             print(
                                 "item: ${usersData[index]['title']}, index: ${usersData[index]['movie_id']}");
-                            if (index == usersData.length - 1) {
+                            if (index == usersData.length - 2) {
                               print("need to req again");
+                              setState(() async {
+                                response = await getData();
+                              });
+                            }
+                            if (index == usersData.length - 1) {
+                              print("assigning new reg");
                               setState(() {
-                                appendData();
+                                createCards(
+                                    response, jsonDecode(response)['results']);
                               });
                             }
                           },
@@ -528,4 +477,24 @@ class _DashboardState extends State<Dashboard> {
       ),
     );
   }
+}
+
+Route _createRoute(data) {
+  return PageRouteBuilder(
+    pageBuilder: (context, animation, secondaryAnimation) => MatchPage(
+      content: data,
+    ),
+    transitionsBuilder: (context, animation, secondaryAnimation, child) {
+      const begin = Offset(0.0, 1.0);
+      const end = Offset.zero;
+      const curve = Curves.ease;
+
+      var tween = Tween(begin: begin, end: end).chain(CurveTween(curve: curve));
+
+      return SlideTransition(
+        position: animation.drive(tween),
+        child: child,
+      );
+    },
+  );
 }

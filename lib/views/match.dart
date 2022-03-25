@@ -99,14 +99,17 @@ class _MatchPageState extends State<MatchPage> {
               statusBarColor: Color.fromARGB(255, 245, 23, 215)),
           elevation: 0.0,
           backgroundColor: Color.fromARGB(255, 245, 23, 215),
-          toolbarHeight: 50.0,
+          toolbarHeight: 100.0,
           titleSpacing: 36.0,
-          title: const Text(
-            'Match',
+          centerTitle: true,
+          title: Text(
+            'A similar user\nLOVES these 3...',
             style: TextStyle(
-                fontSize: 30.0,
-                color: Colors.white,
-                fontWeight: FontWeight.bold),
+              fontSize: 27.0,
+              color: Colors.white,
+              fontWeight: FontWeight.bold,
+            ),
+            textAlign: TextAlign.center,
           )),
       body: Container(
         child: isLoading
