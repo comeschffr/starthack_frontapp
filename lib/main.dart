@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:starthack_frontapp/views/dashboard.dart';
+import 'package:starthack_frontapp/views/match.dart';
 
 void main() {
   runApp(MyApp());
