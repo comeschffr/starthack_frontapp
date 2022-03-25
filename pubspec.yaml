@@ -43,6 +43,7 @@ dependencies:
   youtube_player_flutter: ^8.0.0
   youtube_player_iframe: ^2.2.2
   page_transition: ^2.0.5
+  animate_do: ^2.1.0
 
 dev_dependencies:
   flutter_test:

@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:animate_do/animate_do.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/services.dart';
@@ -58,26 +59,55 @@ class _RecommendationsPageState extends State<RecommendationsPage> {
       body: ListView.builder(
         itemCount: superliked.length,
         itemBuilder: (context, index) {
-          return Dismissible(
-            background: Container(color: Colors.red),
-            child: BuildItem(
-                posterurl: superliked[index]['poster_url'],
-                title: superliked[index]['title'],
-                releasedate: superliked[index]['release_date'],
-                genres: superliked[index]['genres'],
-                rating: superliked[index]['rating'],
-                top3cast: superliked[index]['top3_cast'],
-                plot: superliked[index]['plot'],
-                context: context),
-            key: UniqueKey(),
-            direction: DismissDirection.endToStart,
-            onDismissed: (DismissDirection direction) {
-              setState(() async {
-                await HttpService.remfav(superliked[index]['movie_id']);
-                superliked.removeAt(index);
-              });
-            },
-          );
+          return index % 2 == 0
+              ? FadeInLeft(
+                  child: Dismissible(
+                    background: Container(color: Colors.red),
+                    child: BuildItem(
+                        posterurl: superliked[index]['poster_url'],
+                        title: superliked[index]['title'],
+                        releasedate: superliked[index]['release_date'],
+                        genres: superliked[index]['genres'],
+                        rating: superliked[index]['rating'],
+                        top3cast: superliked[index]['top3_cast'],
+                        plot: superliked[index]['plot'],
+                        context: context),
+                    key: UniqueKey(),
+                    direction: DismissDirection.endToStart,
+                    onDismissed: (DismissDirection direction) {
+                      setState(() async {
+                        await HttpService.remfav(superliked[index]['movie_id']);
+                        superliked.removeAt(index);
+                      });
+                    },
+                  ),
+                  duration: const Duration(milliseconds: 600),
+                  from: 400,
+                )
+              : FadeInRight(
+                  child: Dismissible(
+                    background: Container(color: Colors.red),
+                    child: BuildItem(
+                        posterurl: superliked[index]['poster_url'],
+                        title: superliked[index]['title'],
+                        releasedate: superliked[index]['release_date'],
+                        genres: superliked[index]['genres'],
+                        rating: superliked[index]['rating'],
+                        top3cast: superliked[index]['top3_cast'],
+                        plot: superliked[index]['plot'],
+                        context: context),
+                    key: UniqueKey(),
+                    direction: DismissDirection.endToStart,
+                    onDismissed: (DismissDirection direction) {
+                      setState(() async {
+                        await HttpService.remfav(superliked[index]['movie_id']);
+                        superliked.removeAt(index);
+                      });
+                    },
+                  ),
+                  duration: const Duration(milliseconds: 600),
+                  from: 400,
+                );
         },
       ),
       bottomNavigationBar: ClipRRect(
