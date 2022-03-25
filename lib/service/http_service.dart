@@ -16,6 +16,9 @@ class HttpService {
   static var _sendSwipe =
       Uri.parse('https://main-starthack-backend.herokuapp.com/swipe');
 
+  static var _getFavorites =
+      Uri.parse('https://main-starthack-backend.herokuapp.com/get_favorites');
+
   static sendop(movieid, swipe) async {
     http.Response response = await _client.post(_sendSwipe,
         body: {'movie_id': movieid.toString(), 'swipe': swipe});
@@ -28,6 +31,21 @@ class HttpService {
 
   Future<String> getnextcards() async {
     final response = await http.get(_getMovie);
+
+    if (response.statusCode == 200) {
+      // If the server did return a 200 OK response,
+      // then parse the JSON.
+      //print(response.body);
+      return response.body;
+    } else {
+      // If the server did not return a 200 OK response,
+      // then throw an exception.
+      throw Exception('Failed to load');
+    }
+  }
+
+  Future<String> getfavoritecards() async {
+    final response = await http.get(_getFavorites);
 
     if (response.statusCode == 200) {
       // If the server did return a 200 OK response,

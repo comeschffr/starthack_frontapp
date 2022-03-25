@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:starthack_frontapp/service/http_service.dart';
+import 'package:starthack_frontapp/views/recommendations.dart';
 import 'package:starthack_frontapp/views/shorts.dart';
 import 'package:starthack_frontapp/views/trailers.dart';
 import 'package:swipe_cards/draggable_card.dart';
@@ -136,7 +137,9 @@ class _DashboardState extends State<Dashboard> {
   @override
   Widget build(BuildContext context) {
     SystemChrome.setPreferredOrientations([
-      DeviceOrientation.portraitUp,
+      DeviceOrientation.landscapeRight,
+      DeviceOrientation.landscapeLeft,
+      DeviceOrientation.portraitUp
     ]);
     return Scaffold(
       extendBody: false,
@@ -198,7 +201,10 @@ class _DashboardState extends State<Dashboard> {
                                           PageRouteBuilder(
                                               pageBuilder: ((context, animation,
                                                       secondaryAnimation) =>
-                                                  ShortsPage()),
+                                                  ShortsPage(
+                                                    shortslist: usersData[index]
+                                                        ['shorts_urls'],
+                                                  )),
                                               transitionDuration: Duration.zero,
                                               reverseTransitionDuration:
                                                   Duration.zero));
@@ -223,7 +229,8 @@ class _DashboardState extends State<Dashboard> {
                                                       secondaryAnimation) =>
                                                   TrailerPage(
                                                       trailerurl:
-                                                          'https://flutter.github.io/assets-for-api-docs/assets/videos/butterfly.mp4')),
+                                                          usersData[index]
+                                                              ['trailer_url'])),
                                               transitionDuration: Duration.zero,
                                               reverseTransitionDuration:
                                                   Duration.zero));
@@ -484,7 +491,19 @@ class _DashboardState extends State<Dashboard> {
                 label: 'shorts',
               ),
               BottomNavigationBarItem(
-                  icon: Icon(CupertinoIcons.bookmark_fill),
+                  icon: IconButton(
+                    icon: Icon(CupertinoIcons.bookmark),
+                    onPressed: () {
+                      Navigator.pushReplacement(
+                          context,
+                          PageRouteBuilder(
+                              pageBuilder:
+                                  ((context, animation, secondaryAnimation) =>
+                                      RecommendationsPage()),
+                              transitionDuration: Duration.zero,
+                              reverseTransitionDuration: Duration.zero));
+                    },
+                  ),
                   label: 'recommendations'),
               BottomNavigationBarItem(
                   icon: Icon(CupertinoIcons.profile_circled), label: "profile")

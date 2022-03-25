@@ -111,6 +111,8 @@ class _DetailsPageState extends State<DetailsPage> {
                                 padding: const EdgeInsets.fromLTRB(
                                     0.0, 0.0, 12.0, 0.0),
                                 child: Container(
+                                    padding: EdgeInsets.all(2),
+                                    alignment: Alignment.centerLeft,
                                     decoration: BoxDecoration(
                                         border: Border.all(color: Colors.white),
                                         borderRadius: BorderRadius.all(

@@ -5,7 +5,8 @@ import 'package:chewie/chewie.dart';
 import 'package:video_player/video_player.dart';
 
 class ShortsPage extends StatefulWidget {
-  const ShortsPage({Key? key}) : super(key: key);
+  final List shortslist;
+  const ShortsPage({Key? key, required this.shortslist}) : super(key: key);
 
   @override
   State<ShortsPage> createState() => _ShortsPageState();
@@ -14,10 +15,6 @@ class ShortsPage extends StatefulWidget {
 class _ShortsPageState extends State<ShortsPage> {
   final GlobalKey<ScaffoldMessengerState> _scaffoldKey =
       GlobalKey<ScaffoldMessengerState>();
-  List shortslist = [
-    "https://scontent.cdninstagram.com/v/t50.2886-16/41487015_159662494943952_4263008713966562814_n.mp4?efg=eyJ2ZW5jb2RlX3RhZyI6InZ0c192b2RfdXJsZ2VuLjY0MC5mZWVkLiIsInFlX2dyb3VwcyI6IltcImlnX3dlYl9kZWxpdmVyeV92dHNfb3RmXCJdIn0&_nc_ht=instagram.fzrh3-1.fna.fbcdn.net&_nc_cat=100&_nc_ohc=eltScgM1FcIAX_yG8Cx&edm=AP_V10EBAAAA&vs=17889061516254352_1099157646&_nc_vs=HBksFQAYJEdLY0tlUUxRaWt0U05wRUFBUDR0WDhiV1B5azdia1lMQUFBRhUAAsgBABUAGCRHTlJhZWdJSVI0emFZWmNBQUxJdXAzSEdteTFkYmtZTEFBQUYVAgLIAQAoABgAGwAVAAAmwoawmaLc6AcVAigCQzMsF0AxAAAAAAAAGBRkYXNoX2Jhc2VsaW5lXzY0MF92MREAdeoHAA%3D%3D&ccb=7-4&oe=623EB83C&oh=00_AT9_rGkEdqhgV49fBtSfeq4ba-_GCnrgCXqrgLTFVzZGvA&_nc_sid=4f375e",
-    "https://flutter.github.io/assets-for-api-docs/assets/videos/butterfly.mp4"
-  ];
   String videourl = "";
 
   //final videoPlayerController = VideoPlayerController.network(
@@ -46,7 +43,7 @@ class _ShortsPageState extends State<ShortsPage> {
   @override
   void initState() {
     index = 0;
-    videourl = shortslist[index];
+    videourl = widget.shortslist[index];
     //_chewielistitem = ChewieListItem(
     //  videoPlayerController: VideoPlayerController.network(shortslist[index]),
     //  looping: false,
@@ -117,12 +114,12 @@ class _ShortsPageState extends State<ShortsPage> {
             child: InkWell(
               onTap: () {
                 setState(() {
-                  if (index + 1 < shortslist.length) {
+                  if (index + 1 < widget.shortslist.length) {
                     _chewieController.dispose();
                     _chewieController.videoPlayerController.dispose();
                     index++;
                     print(index);
-                    videourl = shortslist[index];
+                    videourl = widget.shortslist[index];
                     print(videourl);
                     _chewieController = createChewieController(videourl);
                   }
