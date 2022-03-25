@@ -16,7 +16,7 @@ import 'package:http/http.dart' as http;
 
 class Content {
   final String? text;
-
+  
   Content({this.text});
 }
 
