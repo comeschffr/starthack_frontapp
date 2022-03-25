@@ -19,6 +19,8 @@ class HttpService {
   static var _getFavorites =
       Uri.parse('https://main-starthack-backend.herokuapp.com/get_favorites');
 
+  static var _remFavorites =
+      Uri.parse('https://main-starthack-backend.herokuapp.com/remove_favorite');
   static sendop(movieid, swipe) async {
     http.Response response = await _client.post(_sendSwipe,
         body: {'movie_id': movieid.toString(), 'swipe': swipe});
@@ -56,6 +58,16 @@ class HttpService {
       // If the server did not return a 200 OK response,
       // then throw an exception.
       throw Exception('Failed to load');
+    }
+  }
+
+  static remfav(movieid) async {
+    http.Response response = await _client
+        .post(_remFavorites, body: {'movie_id': movieid.toString()});
+    if (response.statusCode == 200) {
+      print("removed preference: $movieid");
+    } else {
+      print("error");
     }
   }
 }

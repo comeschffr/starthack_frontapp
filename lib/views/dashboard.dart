@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:starthack_frontapp/service/http_service.dart';
+import 'package:starthack_frontapp/views/match.dart';
 import 'package:starthack_frontapp/views/recommendations.dart';
 import 'package:starthack_frontapp/views/shorts.dart';
 import 'package:starthack_frontapp/views/trailers.dart';
@@ -41,44 +42,54 @@ class _DashboardState extends State<Dashboard> {
     List<dynamic> data = jsonDecode(response)['results'];
     print(data[0]);
     print("printed data");
-    setState(() {
-      usersData = data;
+    if (jsonDecode(response)['match'] == true) {
+      Navigator.pushReplacement(
+          context,
+          PageRouteBuilder(
+              pageBuilder: ((context, animation, secondaryAnimation) =>
+                  MatchPage(content: data)),
+              transitionDuration: Duration.zero,
+              reverseTransitionDuration: Duration.zero));
+    } else {
+      setState(() {
+        usersData = data;
 
-      if (usersData.isNotEmpty) {
-        for (int i = 0; i < usersData.length; i++) {
-          _swipeItems.add(SwipeItem(
-              // content: Content(text: _names[i], color: _colors[i]),
-              content: Content(text: usersData[i]['title']),
-              likeAction: () async {
-                await HttpService.sendop(usersData[i]['movie_id'], 'right');
-                _scaffoldKey.currentState?.showSnackBar(const SnackBar(
-                  content: Text("Liked "),
-                  //  content: Text("Liked ${_names[i]}"),
-                  duration: Duration(milliseconds: 500),
-                ));
-              },
-              nopeAction: () async {
-                await HttpService.sendop(usersData[i]['movie_id'], 'left');
-                _scaffoldKey.currentState?.showSnackBar(SnackBar(
-                  content: Text("Nope ${usersData[i]['title']}"),
-                  duration: const Duration(milliseconds: 500),
-                ));
-              },
-              superlikeAction: () async {
-                await HttpService.sendop(usersData[i]['movie_id'], 'up');
-                _scaffoldKey.currentState?.showSnackBar(SnackBar(
-                  content: Text("Superliked ${usersData[i]['title']}"),
-                  duration: const Duration(milliseconds: 500),
-                ));
-              },
-              onSlideUpdate: (SlideRegion? region) async {
-                print("Region $region");
-              }));
-        } //for loop
-        _matchEngine = MatchEngine(swipeItems: _swipeItems);
-        isLoading = false;
-      } //if
-    }); // setState
+        if (usersData.isNotEmpty) {
+          for (int i = 0; i < usersData.length; i++) {
+            _swipeItems.add(SwipeItem(
+                // content: Content(text: _names[i], color: _colors[i]),
+                content: Content(text: usersData[i]['title']),
+                likeAction: () async {
+                  await HttpService.sendop(usersData[i]['movie_id'], 'right');
+                  _scaffoldKey.currentState?.showSnackBar(const SnackBar(
+                    content: Text("Liked "),
+                    //  content: Text("Liked ${_names[i]}"),
+                    duration: Duration(milliseconds: 500),
+                  ));
+                },
+                nopeAction: () async {
+                  await HttpService.sendop(usersData[i]['movie_id'], 'left');
+                  _scaffoldKey.currentState?.showSnackBar(SnackBar(
+                    content: Text("Nope ${usersData[i]['title']}"),
+                    duration: const Duration(milliseconds: 500),
+                  ));
+                },
+                superlikeAction: () async {
+                  await HttpService.sendop(usersData[i]['movie_id'], 'up');
+                  _scaffoldKey.currentState?.showSnackBar(SnackBar(
+                    content: Text("Superliked ${usersData[i]['title']}"),
+                    duration: const Duration(milliseconds: 500),
+                  ));
+                },
+                onSlideUpdate: (SlideRegion? region) async {
+                  print("Region $region");
+                }));
+          } //for loop
+          _matchEngine = MatchEngine(swipeItems: _swipeItems);
+          isLoading = false;
+        } //if
+      });
+    } // setState
   } // getData
 
   Future appendData() async {
@@ -88,44 +99,54 @@ class _DashboardState extends State<Dashboard> {
     List<dynamic> data = jsonDecode(response)['results'];
     print(data[0]);
     print("printed data");
-    setState(() {
-      usersData.addAll(data);
+    if (jsonDecode(response)['match'] == true) {
+      Navigator.pushReplacement(
+          context,
+          PageRouteBuilder(
+              pageBuilder: ((context, animation, secondaryAnimation) =>
+                  MatchPage(content: data)),
+              transitionDuration: Duration.zero,
+              reverseTransitionDuration: Duration.zero));
+    } else {
+      setState(() {
+        usersData.addAll(data);
 
-      if (usersData.isNotEmpty) {
-        for (int i = 1; i < usersData.length; i++) {
-          _swipeItems.add(SwipeItem(
-              // content: Content(text: _names[i], color: _colors[i]),
-              content: Content(text: usersData[i]['title']),
-              likeAction: () async {
-                await HttpService.sendop(usersData[i]['movie_id'], 'right');
-                _scaffoldKey.currentState?.showSnackBar(const SnackBar(
-                  content: Text("Liked "),
-                  //  content: Text("Liked ${_names[i]}"),
-                  duration: Duration(milliseconds: 500),
-                ));
-              },
-              nopeAction: () async {
-                await HttpService.sendop(usersData[i]['movie_id'], 'left');
-                _scaffoldKey.currentState?.showSnackBar(SnackBar(
-                  content: Text("Nope ${usersData[i]['title']}"),
-                  duration: const Duration(milliseconds: 500),
-                ));
-              },
-              superlikeAction: () async {
-                await HttpService.sendop(usersData[i]['movie_id'], 'up');
-                _scaffoldKey.currentState?.showSnackBar(SnackBar(
-                  content: Text("Superliked ${usersData[i]['title']}"),
-                  duration: const Duration(milliseconds: 500),
-                ));
-              },
-              onSlideUpdate: (SlideRegion? region) async {
-                print("Region $region");
-              }));
-        } //for loop
-        _matchEngine = MatchEngine(swipeItems: _swipeItems);
-        isLoading = false;
-      } //if
-    }); // setState
+        if (usersData.isNotEmpty) {
+          for (int i = 1; i < usersData.length; i++) {
+            _swipeItems.add(SwipeItem(
+                // content: Content(text: _names[i], color: _colors[i]),
+                content: Content(text: usersData[i]['title']),
+                likeAction: () async {
+                  await HttpService.sendop(usersData[i]['movie_id'], 'right');
+                  _scaffoldKey.currentState?.showSnackBar(const SnackBar(
+                    content: Text("Liked "),
+                    //  content: Text("Liked ${_names[i]}"),
+                    duration: Duration(milliseconds: 500),
+                  ));
+                },
+                nopeAction: () async {
+                  await HttpService.sendop(usersData[i]['movie_id'], 'left');
+                  _scaffoldKey.currentState?.showSnackBar(SnackBar(
+                    content: Text("Nope ${usersData[i]['title']}"),
+                    duration: const Duration(milliseconds: 500),
+                  ));
+                },
+                superlikeAction: () async {
+                  await HttpService.sendop(usersData[i]['movie_id'], 'up');
+                  _scaffoldKey.currentState?.showSnackBar(SnackBar(
+                    content: Text("Superliked ${usersData[i]['title']}"),
+                    duration: const Duration(milliseconds: 500),
+                  ));
+                },
+                onSlideUpdate: (SlideRegion? region) async {
+                  print("Region $region");
+                }));
+          } //for loop
+          _matchEngine = MatchEngine(swipeItems: _swipeItems);
+          isLoading = false;
+        } //if
+      }); // setState
+    }
   }
 
   @override
@@ -346,7 +367,7 @@ class _DashboardState extends State<Dashboard> {
                           itemChanged: (SwipeItem item, int index) async {
                             print(
                                 "item: ${usersData[index]['title']}, index: ${usersData[index]['movie_id']}");
-                            if (index == usersData.length - 2) {
+                            if (index == usersData.length - 1) {
                               print("need to req again");
                               setState(() {
                                 appendData();

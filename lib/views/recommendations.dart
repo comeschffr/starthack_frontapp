@@ -58,15 +58,26 @@ class _RecommendationsPageState extends State<RecommendationsPage> {
       body: ListView.builder(
         itemCount: superliked.length,
         itemBuilder: (context, index) {
-          return BuildItem(
-              posterurl: superliked[index]['poster_url'],
-              title: superliked[index]['title'],
-              releasedate: superliked[index]['release_date'],
-              genres: superliked[index]['genres'],
-              rating: superliked[index]['rating'],
-              top3cast: superliked[index]['top3_cast'],
-              plot: superliked[index]['plot'],
-              context: context);
+          return Dismissible(
+            background: Container(color: Colors.red),
+            child: BuildItem(
+                posterurl: superliked[index]['poster_url'],
+                title: superliked[index]['title'],
+                releasedate: superliked[index]['release_date'],
+                genres: superliked[index]['genres'],
+                rating: superliked[index]['rating'],
+                top3cast: superliked[index]['top3_cast'],
+                plot: superliked[index]['plot'],
+                context: context),
+            key: UniqueKey(),
+            direction: DismissDirection.endToStart,
+            onDismissed: (DismissDirection direction) {
+              setState(() async {
+                await HttpService.remfav(superliked[index]['movie_id']);
+                superliked.removeAt(index);
+              });
+            },
+          );
         },
       ),
       bottomNavigationBar: ClipRRect(

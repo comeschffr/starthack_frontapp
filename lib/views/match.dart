@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:starthack_frontapp/service/http_service.dart';
+import 'package:starthack_frontapp/views/dashboard.dart';
 import 'package:starthack_frontapp/views/recommendations.dart';
 import 'package:starthack_frontapp/views/shorts.dart';
 import 'package:starthack_frontapp/views/trailers.dart';
@@ -20,7 +21,8 @@ class Content {
 }
 
 class MatchPage extends StatefulWidget {
-  const MatchPage({Key? key}) : super(key: key);
+  final List content;
+  const MatchPage({Key? key, required this.content}) : super(key: key);
 
   @override
   _MatchPageState createState() => _MatchPageState();
@@ -34,15 +36,9 @@ class _MatchPageState extends State<MatchPage> {
   final GlobalKey<ScaffoldMessengerState> _scaffoldKey =
       GlobalKey<ScaffoldMessengerState>();
 
-  Future getData() async {
-    String response = await HttpService().getnextcards();
-    print("Matches!");
-    print(jsonDecode(response)['results']);
-    List<dynamic> data = jsonDecode(response)['results'];
-    print(data[0]);
-    print("printed data");
+  Future setData() async {
     setState(() {
-      usersData = data;
+      usersData = widget.content;
 
       if (usersData.isNotEmpty) {
         for (int i = 0; i < usersData.length; i++) {
@@ -83,7 +79,7 @@ class _MatchPageState extends State<MatchPage> {
 
   @override
   void initState() {
-    getData();
+    setData();
     super.initState();
   }
 
@@ -305,12 +301,19 @@ class _MatchPageState extends State<MatchPage> {
                             );
                           },
                           onStackFinished: () {
+                            Navigator.pushReplacement(
+                                context,
+                                PageRouteBuilder(
+                                    pageBuilder: ((context, animation,
+                                            secondaryAnimation) =>
+                                        Dashboard()),
+                                    transitionDuration: Duration.zero,
+                                    reverseTransitionDuration: Duration.zero));
                             _scaffoldKey.currentState!
                                 .showSnackBar(const SnackBar(
                               content: Text("Stack Finished"),
                               duration: Duration(milliseconds: 500),
                             ));
-                            Navigator.pop(context);
                           },
                           itemChanged: (SwipeItem item, int index) async {
                             print(
